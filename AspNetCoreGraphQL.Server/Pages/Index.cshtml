@@ -1,0 +1,15 @@
+﻿@page
+@model IndexModel
+@inject AspNetCoreGraphQL.Server.DataAccess.MoviesDbContext MoviesDb
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<h1>Movies</h1>
+
+<ul>
+    @foreach (var movie in MoviesDb.Movies.OrderBy(m => m.Year))
+    {
+        <li>@movie.Title (@movie.Year)</li>
+    }
+</ul>
