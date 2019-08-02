@@ -1,9 +1,9 @@
-﻿using MovieDbSample.Server.DataAccess;
-using GraphQL;
+﻿using GraphQL;
 using GraphQL.Types;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using MovieDbSample.DataModels;
+using MovieDbSample.Server.DataAccess;
+using System.Linq;
 
 namespace MovieDbSample.Server.GraphQLModels
 {
