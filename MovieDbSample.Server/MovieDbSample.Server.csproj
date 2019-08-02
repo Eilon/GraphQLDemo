@@ -13,4 +13,8 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.0.0-preview7.19362.6" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MovieDbSample.DataModels\MovieDbSample.DataModels.csproj" />
+  </ItemGroup>
+
 </Project>

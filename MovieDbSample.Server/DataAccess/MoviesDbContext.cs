@@ -1,11 +1,7 @@
-﻿using AspNetCoreGraphQL.Server.DataModels;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
+using MovieDbSample.DataModels;
 
-namespace AspNetCoreGraphQL.Server.DataAccess
+namespace MovieDbSample.Server.DataAccess
 {
     public class MoviesDbContext : DbContext
     {

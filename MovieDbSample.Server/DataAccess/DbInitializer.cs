@@ -1,10 +1,9 @@
-﻿using AspNetCoreGraphQL.Server.DataModels;
+﻿using MovieDbSample.DataModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
-namespace AspNetCoreGraphQL.Server.DataAccess
+namespace MovieDbSample.Server.DataAccess
 {
     public static class DbInitializer
     {

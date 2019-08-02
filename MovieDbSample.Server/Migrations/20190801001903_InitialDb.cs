@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace AspNetCoreGraphQL.Server.Migrations
+namespace MovieDbSample.Server.Migrations
 {
     public partial class InitialDb : Migration
     {

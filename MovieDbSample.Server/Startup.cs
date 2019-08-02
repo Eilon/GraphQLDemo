@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AspNetCoreGraphQL.Server.DataAccess;
-using AspNetCoreGraphQL.Server.GraphQLModels;
+using MovieDbSample.Server.DataAccess;
+using MovieDbSample.Server.GraphQLModels;
 using GraphQL;
 using GraphQL.Server;
 using GraphQL.Server.Ui.GraphiQL;
@@ -11,13 +7,12 @@ using GraphQL.Server.Ui.Playground;
 using GraphQL.Server.Ui.Voyager;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace AspNetCoreGraphQL.Server
+namespace MovieDbSample.Server
 {
     public class Startup
     {
@@ -40,27 +35,29 @@ namespace AspNetCoreGraphQL.Server
             
             services.AddRazorPages();
 
-            // Temporary workaround. See https://github.com/graphql-dotnet/graphql-dotnet/issues/1116
+
+            // Temporary workaround required for GraphQL. See https://github.com/graphql-dotnet/graphql-dotnet/issues/1116
             services.Configure<IISServerOptions>(options =>
             {
                 options.AllowSynchronousIO = true;
             });
 
 
-            // GraphQL
+            // ---------- GraphQL services ----------
+
+            // Map GraphQL DI to ASP.NET Core DI
             services.AddScoped<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
+
+            // Add root schema object
             services.AddScoped<MoviesGraphQLSchema>();
 
+            // Add GraphQL services and hierarchy of graph types
             services.AddGraphQL(options =>
                 {
                     options.EnableMetrics = true;
                     options.ExposeExceptions = HostingEnvironment.IsDevelopment();
                 })
-                .AddGraphTypes(ServiceLifetime.Scoped)
-                .AddRelayGraphTypes();
-
-
-
+                .AddGraphTypes(ServiceLifetime.Scoped);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -79,6 +76,9 @@ namespace AspNetCoreGraphQL.Server
 
             app.UseHttpsRedirection();
 
+            
+            // ---------- GraphQL middlesware ----------
+
             // use HTTP middleware at path /graphql
             app.UseGraphQL<MoviesGraphQLSchema>("/graphql");
 
@@ -90,6 +90,7 @@ namespace AspNetCoreGraphQL.Server
 
             // use voyager middleware at default url /ui/voyager
             app.UseGraphQLVoyager(new GraphQLVoyagerOptions());
+
 
 
             app.UseStaticFiles();

@@ -1,11 +1,11 @@
-﻿using AspNetCoreGraphQL.Server.DataAccess;
-using AspNetCoreGraphQL.Server.DataModels;
+﻿using MovieDbSample.Server.DataAccess;
 using GraphQL;
 using GraphQL.Types;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using MovieDbSample.DataModels;
 
-namespace AspNetCoreGraphQL.Server.GraphQLModels
+namespace MovieDbSample.Server.GraphQLModels
 {
     public class MoviesGraphQLSchema : Schema
     {

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
-namespace AspNetCoreGraphQL.Server.Pages
+namespace MovieDbSample.Server.Pages
 {
     public class IndexModel : PageModel
     {
