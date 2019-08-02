@@ -27,18 +27,23 @@ namespace AspNetCoreGraphQL.Server.GraphQLModels
 
             Field<ListGraphType<MovieType>>(
                 "movies",
-                arguments: new QueryArguments(new QueryArgument<GenreType>() { Name = "genre", Description = "Return only movies in this genre." }),
+                arguments: new QueryArguments(
+                    new QueryArgument<GenreType>() { Name = "genre", Description = "Return only movies in this genre." },
+                    new QueryArgument<IntGraphType>() { Name = "first", Description = "The number of items to include." }
+                ),
                 resolve: context =>
                 {
+                    var movies = moviesDbContext.Movies.AsEnumerable();
                     if (context.Arguments.ContainsKey("genre"))
                     {
                         var genre = context.GetArgument<Genre>("genre");
-                        return moviesDbContext.Movies.Where(m => m.Genre == genre);
+                        movies = movies.Where(m => m.Genre == genre);
                     }
-                    else
+                    if (context.Arguments.ContainsKey("first"))
                     {
-                        return moviesDbContext.Movies;
+                        movies = movies.Take(context.GetArgument<int>("first"));
                     }
+                    return movies;
                 },
                 description: "All movies.");
             FieldAsync<MovieType>(
@@ -84,7 +89,20 @@ namespace AspNetCoreGraphQL.Server.GraphQLModels
             Field(x => x.Language).Description("Movie language.");
             Field(x => x.Genre, type: typeof(GenreType)).Description("Movie genre.");
 
-            Field<ListGraphType<CastMemberType>>("cast", resolve: context => moviesDbContext.Movies.Include(m => m.Cast).SingleOrDefault(m => m.ID == context.Source.ID).Cast);
+            Field<ListGraphType<CastMemberType>>(
+                "cast",
+                arguments: new QueryArguments(
+                    new QueryArgument<IntGraphType>() { Name = "first", Description = "The number of items to include." }),
+                description: "The cast of the movie",
+                resolve: context =>
+                {
+                    var cast = moviesDbContext.Movies.Include(m => m.Cast).SingleOrDefault(m => m.ID == context.Source.ID).Cast.AsEnumerable();
+                    if (context.Arguments.ContainsKey("first"))
+                    {
+                        cast = cast.Take(context.GetArgument<int>("first"));
+                    }
+                    return cast;
+                });
         }
     }
 
