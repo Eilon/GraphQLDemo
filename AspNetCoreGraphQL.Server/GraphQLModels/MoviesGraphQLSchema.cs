@@ -25,7 +25,22 @@ namespace AspNetCoreGraphQL.Server.GraphQLModels
             Name = "MoviesDb";
             Description = "A database of movies, actors, and characters.";
 
-            Field<ListGraphType<MovieType>>("movies", resolve: context => moviesDbContext.Movies, description: "All movies.");
+            Field<ListGraphType<MovieType>>(
+                "movies",
+                arguments: new QueryArguments(new QueryArgument<GenreType>() { Name = "genre", Description = "Return only movies in this genre." }),
+                resolve: context =>
+                {
+                    if (context.Arguments.ContainsKey("genre"))
+                    {
+                        var genre = context.GetArgument<Genre>("genre");
+                        return moviesDbContext.Movies.Where(m => m.Genre == genre);
+                    }
+                    else
+                    {
+                        return moviesDbContext.Movies;
+                    }
+                },
+                description: "All movies.");
             FieldAsync<MovieType>(
                 "movie",
                 arguments: new QueryArguments(new QueryArgument<NonNullGraphType<IdGraphType>> { Name = "id" }),
